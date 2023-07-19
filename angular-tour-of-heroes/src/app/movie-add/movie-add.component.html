@@ -1,0 +1,54 @@
+<div class="forma">
+    <form class="form-container" #movieAddForm="ngForm">
+        <h2>You are adding a new Movie</h2>
+        
+        <mat-form-field appearance="fill">
+
+            <mat-label>Title</mat-label>
+    
+            <input matInput required #title="ngModel" [(ngModel)]="movie!.title" name="title">
+            <mat-error *ngIf="title.invalid">
+                Title is required
+            </mat-error>
+    
+    
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Choose a date</mat-label>
+            <input matInput required [matDatepicker]="picker" #releaseDate="ngModel" [(ngModel)]="movie!.releaseDate" name="releaseDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="releaseDate.invalid">
+                Release date is required
+            </mat-error>
+        </mat-form-field>
+          
+        <mat-form-field appearance="fill">
+    
+            <mat-label>Genre</mat-label>
+    
+            <input matInput required #genre="ngModel" [(ngModel)]="movie!.genreName" name="genre">
+            <mat-error *ngIf="genre.invalid">
+                Genre is required
+            </mat-error>
+    
+    
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+    
+            <mat-label>Run time</mat-label>
+    
+            <input matInput required #runtime="ngModel" [(ngModel)]="movie!.runTime" name="runtime">
+            <mat-error *ngIf="runtime.invalid">
+                Run time is required
+            </mat-error>
+    
+    
+        </mat-form-field>
+        
+        <div class="button-container">
+            <button type="submit" mat-raised-button [disabled]="movieAddForm.invalid" (click)="OnSubmit()">Submit</button>
+        </div>
+    </form>
+</div>
