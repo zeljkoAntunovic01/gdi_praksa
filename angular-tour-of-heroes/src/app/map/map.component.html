@@ -1,0 +1,29 @@
+<h1>Angular Google Maps (AGM) Demo</h1>
+<p><a href="https://angular-maps.com/" target="_blank">Official Website</a></p>
+
+<agm-map 
+  [latitude]="lat"
+  [longitude]="lng"
+  [zoom]="zoom"
+  [disableDefaultUI]="false"
+  (mapClick)="mapClicked($event)">
+
+  <agm-marker 
+      *ngFor="let m of markers; let i = index"
+      (markerClick)="clickedMarker(m.id!)"
+      [latitude]="m.lat"
+      [longitude]="m.lng"
+      [label]="m.label!"
+      [markerDraggable]="m.draggable"
+      (dragEnd)="markerDragEnd(m, $event)">
+      
+    <agm-snazzy-info-window  [maxWidth]="400" [closeWhenOthersOpen]="true">
+      <ng-template>
+        <app-cinema-info *ngIf="details" [projections]="projectionsInCinema" [cinema]="selectedCinema!"></app-cinema-info>
+      </ng-template>
+    </agm-snazzy-info-window>
+    
+  </agm-marker>
+  
+
+</agm-map>

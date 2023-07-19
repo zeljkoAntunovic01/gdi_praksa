@@ -1,0 +1,21 @@
+<form class="form-container" #genreForm="ngForm">
+    <mat-form-field appearance="fill">
+
+        <mat-label>Value</mat-label>
+
+        <input matInput required #name="ngModel" [(ngModel)]="genre!.name" name="value">
+        <mat-error *ngIf="name.invalid">
+            Name is required
+        </mat-error>
+
+
+    </mat-form-field>
+
+    <div class="button-container">
+
+        <button type="submit" mat-raised-button [disabled]="genreForm.invalid" (click)="OnSubmit()">Submit</button>
+
+    </div>
+    
+
+</form>

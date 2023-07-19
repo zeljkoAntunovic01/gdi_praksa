@@ -1,0 +1,27 @@
+<mat-accordion>
+    <mat-expansion-panel *ngIf="cinema">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Naziv
+          </mat-panel-title>
+          <mat-panel-description>
+            {{cinema!.name}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>{{cinema!.adress}}.</p>
+      </mat-expansion-panel>
+    
+    <mat-expansion-panel *ngIf="earliestProjection">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Najranija projekcija
+          </mat-panel-title>
+          <mat-panel-description>
+            {{earliestProjection!.movieTitle}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>Termin: {{earliestProjection!.dateTimeProjection.split(' ')[1]}}</p>
+        <p>Tip projekcije: {{earliestProjection!.projectionTypeName}}</p>
+      </mat-expansion-panel>
+  </mat-accordion>
+  

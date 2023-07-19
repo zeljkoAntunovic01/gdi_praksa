@@ -1,0 +1,17 @@
+<div class="forma">
+    <form class="form-container" #genreAddForm="ngForm">
+        <h2>You are adding a new Genre</h2>
+        
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput required #name="ngModel" [(ngModel)]="genre!.name" name="name">
+            <mat-error *ngIf="name.invalid">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+        
+        <div class="button-container">
+            <button type="submit" mat-raised-button [disabled]="genreAddForm.invalid" (click)="OnSubmit()">Submit</button>
+        </div>
+    </form>
+</div>
