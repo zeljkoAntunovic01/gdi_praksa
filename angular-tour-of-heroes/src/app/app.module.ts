@@ -53,7 +53,7 @@ import {MatList, MatListModule} from '@angular/material/list';
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
-      apiKey: 'AIzaSyAgXYS9LfL6mLEO7FkyycSUmHG1QPRQ2q0'
+      apiKey: ''
     }),
     AgmSnazzyInfoWindowModule,
     MatExpansionModule,
