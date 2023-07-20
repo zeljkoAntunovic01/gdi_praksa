@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    partial class MoviesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230720070119_CinemaEarliestProjection")]
+    partial class CinemaEarliestProjection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,40 +50,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cinemas");
-                });
-
-            modelBuilder.Entity("Core.Entities.EarliestProjectionPerCinema", b =>
-                {
-                    b.Property<long>("CinemaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CinemaName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GenreName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MovieTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProjectionDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProjectionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RunTime")
-                        .HasColumnType("int");
-
-                    b.HasKey("CinemaId");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("EarliestProjectionPerCinema", (string)null);
                 });
 
             modelBuilder.Entity("Core.Entities.Genre", b =>
