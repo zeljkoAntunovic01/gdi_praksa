@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Praksa.Models;
+using System.Diagnostics;
 
 namespace Praksa.Controllers
 {
@@ -95,12 +96,12 @@ namespace Praksa.Controllers
                             cinemaName = cinema.Name,
                             projectionTypeName = projectionType.Name
                         };
-            var queryLinq = await _dbContext.Projections.Include(x => x.Movie).Include(x => x.Cinema).Include(x => x.ProjectionType).Where(x => x.CinemaId == id).ToListAsync();
-            var queryLinq = await _dbContext.Projections.Include(x => x.Movie).Include(x => x.Cinema).Include(x => x.ProjectionType).FirstAsync(x => x.CinemaId == id);
+            //var queryLinq = await _dbContext.Projections.Include(x => x.Movie).Include(x => x.Cinema).Include(x => x.ProjectionType).Where(x => x.CinemaId == id).ToListAsync();
+            
             var results = await query.ToListAsync();
             List<ProjectionModel> projections = new List<ProjectionModel>();
             foreach (var result in results)
-            {
+            {   
                 DateTime d = result.projection.ProjectionDateTime;
                 string dateTime = d.ToString("MM/dd/yyyy HH:mm:ss");
                 ProjectionModel p = new ProjectionModel
@@ -118,6 +119,73 @@ namespace Praksa.Controllers
             }
             return Ok(projections);
 
+        }
+        [HttpGet("earliest-projection-view/{id:int}")]
+        public async Task<ActionResult<CinemaWithEarliestProjectionModel>> getEarliestProjectionForCinemaView(int id)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var resultBase = await _dbContext.EarliestProjectionsPerCinema.Where(x => x.CinemaId == id).FirstOrDefaultAsync();
+            stopwatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopwatch.Elapsed;
+            string fetchTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            if (resultBase == null)
+            {
+                return BadRequest("Cinema or projection in said cinema doesn't exist");
+            }
+            var result = new CinemaWithEarliestProjectionModel
+            (
+                resultBase.CinemaId,
+                resultBase.CinemaName,
+                resultBase.CinemaLatitude,
+                resultBase.CinemaLongitude,
+                resultBase.CinemaAdress,
+                resultBase.MovieTitle,
+                resultBase.ProjectionDateTime,
+                resultBase.GenreName,
+                resultBase.RunTime,
+                resultBase.ProjectionType,
+                fetchTime
+            );
+
+            return Ok(result);
+
+        }
+        [HttpGet("earliest-projection-linq/{id:int}")]
+        public async Task<ActionResult<CinemaWithEarliestProjectionModel>> getEarliestProjectionForCinemaLinq(int id)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var earliestProjectionForCinema = await _dbContext.Projections
+                .Include(p => p.Cinema)
+                .Include(p => p.Movie.Genre)
+                .Include(p => p.ProjectionType)
+                .Where(p => p.Cinema.Id == id)
+                .OrderBy(p => p.ProjectionDateTime)
+                .FirstOrDefaultAsync();
+            stopwatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopwatch.Elapsed;
+            string fetchTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            var result = new CinemaWithEarliestProjectionModel(
+                earliestProjectionForCinema.Cinema.Id,
+                earliestProjectionForCinema.Cinema.Name,
+                earliestProjectionForCinema.Cinema.Latitude,
+                earliestProjectionForCinema.Cinema.Longitude,
+                earliestProjectionForCinema.Cinema.Adress,
+                earliestProjectionForCinema.Movie.Title,
+                earliestProjectionForCinema.ProjectionDateTime,
+                earliestProjectionForCinema.Movie.Genre.Name,
+                earliestProjectionForCinema.Movie.RunTime,
+                earliestProjectionForCinema.ProjectionType.Name,
+                fetchTime
+                );
+            return Ok(result);
         }
 
     }
